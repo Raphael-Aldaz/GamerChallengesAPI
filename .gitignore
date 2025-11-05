@@ -1,0 +1,11 @@
+.env
+node_modules
+.vscode/
+.DS_Store
+
+Dockerfile
+.dockerignore
+pg-data/
+/generated/prisma
+
+/logs

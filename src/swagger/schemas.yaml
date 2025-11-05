@@ -1,0 +1,417 @@
+components:
+  schemas:
+    # Enums
+    MediaType:
+      type: string
+      enum: [IMAGE, VIDEO]
+      example: IMAGE
+
+    # Role
+    Role:
+      type: object
+      properties:
+        role_id:
+          type: integer
+          example: 1
+        role_name:
+          type: string
+          maxLength: 50
+          example: "ADMIN"
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: null
+
+    # User
+    User:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          example: 1
+        pseudo:
+          type: string
+          maxLength: 50
+          example: "john_gamer"
+        email:
+          type: string
+          format: email
+          maxLength: 255
+          example: "john@example.com"
+        password:
+          type: string
+          maxLength: 255
+          example: "$2b$10$..."
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: null
+
+    # UserAvatar
+    UserAvatar:
+      type: object
+      properties:
+        user_avatar_id:
+          type: integer
+          example: 1
+        user_id:
+          type: integer
+          example: 1
+        media_id:
+          type: integer
+          example: 5
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: null
+
+    # UserRole
+    UserRole:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          example: 1
+        role_id:
+          type: integer
+          example: 2
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: null
+
+    # Game
+    Game:
+      type: object
+      properties:
+        game_id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          maxLength: 255
+          example: "The Legend of Zelda: Breath of the Wild"
+        description:
+          type: string
+          example: "An open-world action-adventure game"
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: null
+
+    # GameImage
+    GameImage:
+      type: object
+      properties:
+        game_image_id:
+          type: integer
+          example: 1
+        game_id:
+          type: integer
+          example: 1
+        media_id:
+          type: integer
+          example: 10
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: null
+
+    # Challenge
+    Challenge:
+      type: object
+      properties:
+        challenge_id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          maxLength: 255
+          example: "Speedrun Any%"
+        description:
+          type: string
+          example: "Complete the game as fast as possible"
+        rules:
+          type: string
+          example: "No glitches allowed. Timer starts on character creation."
+        user_id:
+          type: integer
+          example: 1
+        game_id:
+          type: integer
+          example: 1
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: null
+
+    # Participation
+    Participation:
+      type: object
+      properties:
+        participation_id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          maxLength: 255
+          example: "My speedrun attempt"
+        user_id:
+          type: integer
+          example: 2
+        challenge_id:
+          type: integer
+          example: 1
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: null
+
+    # ParticipationVideo
+    ParticipationVideo:
+      type: object
+      properties:
+        participation_video_id:
+          type: integer
+          example: 1
+        participation_id:
+          type: integer
+          example: 1
+        media_id:
+          type: integer
+          example: 15
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: null
+
+    # ChallengeLike
+    ChallengeLike:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          example: 1
+        challenge_id:
+          type: integer
+          example: 1
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+
+    # ParticipationLike
+    ParticipationLike:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          example: 1
+        participation_id:
+          type: integer
+          example: 1
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+
+    # Media
+    Media:
+      type: object
+      properties:
+        media_id:
+          type: integer
+          example: 1
+        filename:
+          type: string
+          maxLength: 255
+          example: "avatar_123456.jpg"
+        original_name:
+          type: string
+          maxLength: 255
+          example: "profile-picture.jpg"
+        mimetype:
+          type: string
+          maxLength: 100
+          example: "image/jpeg"
+        size:
+          type: integer
+          example: 2048576
+        path:
+          type: string
+          maxLength: 500
+          example: "/uploads/avatars/avatar_123456.jpg"
+        type:
+          $ref: "#/components/schemas/MediaType"
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: null
+
+    # Type
+    Type:
+      type: object
+      properties:
+        type_id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "RPG"
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: null
+
+    # TypeGame
+    TypeGame:
+      type: object
+      properties:
+        game_id:
+          type: integer
+          example: 1
+        type_id:
+          type: integer
+          example: 1
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+
+    # Platform
+    Platform:
+      type: object
+      properties:
+        platform_id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Nintendo Switch"
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: null
+
+    # PlatformGame
+    PlatformGame:
+      type: object
+      properties:
+        game_id:
+          type: integer
+          example: 1
+        platform_id:
+          type: integer
+          example: 1
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"

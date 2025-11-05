@@ -1,0 +1,284 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+model Role {
+  role_id Int @id @default(autoincrement())
+  role_name String @unique @db.VarChar(50)
+  users UserRole[]
+  
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt()
+  deleted_at DateTime?
+
+  @@index([deleted_at])
+  @@map("role")
+}
+
+model User {
+  user_id Int @id @default(autoincrement())
+  pseudo String @unique @db.VarChar(50)
+  email String @unique @db.VarChar(255)
+  password String @db.VarChar(255)
+  
+  // Relations
+  user_avatar UserAvatar?
+  roles UserRole[]
+  challenges Challenge[]
+  participations Participation[]
+  likedChallenges ChallengeLike[]
+  likedParticipations ParticipationLike[]
+  refresh_tokens RefreshToken[]
+  
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt()
+  deleted_at DateTime?
+  @@index([deleted_at])
+  @@map("user")
+}
+model UserAvatar {
+  user_avatar_id Int @id @default(autoincrement())
+  user User @relation(fields: [user_id], references: [user_id],onDelete: Cascade)
+  user_id Int @unique
+  media Media @relation(fields: [media_id], references: [media_id], onDelete: Cascade)
+  media_id Int @unique
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt()
+  deleted_at DateTime?
+  @@index([media_id])
+  @@map("user_avatar")
+}
+model UserRole {
+  user User @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  user_id Int
+  role Role @relation(fields: [role_id], references: [role_id], onDelete: Cascade)
+  role_id Int
+  
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt()
+  deleted_at DateTime?
+  
+  @@id([user_id, role_id])
+  @@index([deleted_at])
+  @@map("user_role")
+}
+
+model Game {
+  game_id Int @id @default(autoincrement())
+  title String @unique @db.VarChar(255)
+  description String @db.Text
+  
+  // Relations
+  gameImages GameImage[]
+  challenges Challenge[]
+  type TypeGame[]
+  platform PlatformGame[]
+  
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt()
+  deleted_at DateTime?
+  
+  @@index([deleted_at])
+  @@map("game")
+}
+model GameImage {
+  game_image_id Int @id @default(autoincrement())
+  
+  game Game @relation(fields: [game_id], references: [game_id], onDelete: Cascade)
+  game_id Int
+  
+  media Media @relation(fields: [media_id], references: [media_id], onDelete: Cascade)
+  media_id Int
+  
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt()
+  deleted_at DateTime?
+  
+  @@index([game_id])
+  @@index([media_id])
+  @@map("game_image")
+}
+model Challenge {
+  challenge_id Int @id @default(autoincrement())
+  title String @db.VarChar(255)
+  description  String @db.Text
+  rules String @db.Text
+  
+  // Relations
+  user User @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  user_id Int
+  game Game @relation(fields: [game_id], references: [game_id], onDelete: Cascade)
+  game_id Int
+  participations Participation[]
+  likes ChallengeLike[]
+  
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt()
+  deleted_at DateTime?
+  
+  @@index([user_id])
+  @@index([game_id])
+  @@index([deleted_at])
+  @@map("challenge")
+}
+model Participation {
+  participation_id Int @id @default(autoincrement())
+  title String @db.VarChar(255)
+
+  // Relations
+  video ParticipationVideo?
+  user User @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  user_id Int
+  challenge Challenge @relation(fields: [challenge_id], references: [challenge_id], onDelete: Cascade)
+  challenge_id Int
+  likes ParticipationLike[]
+  
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt()
+  deleted_at DateTime?
+  
+  @@index([user_id])
+  @@index([challenge_id])
+  @@index([deleted_at])
+  @@map("participation")
+}
+model ParticipationVideo {
+  participation_video_id Int @id @default(autoincrement())
+  
+  participation Participation @relation(fields: [participation_id], references: [participation_id], onDelete: Cascade)
+  participation_id Int @unique
+  
+  media Media @relation(fields: [media_id], references: [media_id], onDelete: Cascade)
+  media_id Int @unique
+  
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt()
+  deleted_at DateTime?
+  
+  @@index([media_id])
+  @@map("participation_video")
+}
+
+model ChallengeLike {
+  user User @relation(fields: [user_id], references: [user_id])
+  user_id Int
+  challenge Challenge @relation(fields: [challenge_id], references: [challenge_id])
+  challenge_id Int
+  
+  created_at DateTime @default(now())
+  
+  @@id([user_id, challenge_id])
+  @@index([challenge_id])
+  @@index([user_id])
+  @@map("challenge_like")
+}
+
+model ParticipationLike {
+  user User @relation(fields: [user_id], references: [user_id])
+  user_id Int
+  participation Participation @relation(fields: [participation_id], references: [participation_id])
+  participation_id Int
+  
+  created_at DateTime @default(now())
+  
+  @@id([user_id, participation_id])
+  @@index([participation_id])
+  @@index([user_id])
+  
+  @@map("participation_like")
+}
+
+model Media {
+  media_id Int @id @default(autoincrement())
+  filename String @unique @db.VarChar(255)
+  original_name String @db.VarChar(255)
+  mimetype String @db.VarChar(100)
+  size Int
+  path String @db.VarChar(500)
+  type MediaType
+
+  // Relations
+  userAvatar UserAvatar?
+  gameImages GameImage[]
+  participationVideo ParticipationVideo?
+  
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt()
+  deleted_at DateTime?
+  
+  @@index([deleted_at])
+  @@map("media")
+}
+model Type {
+  type_id Int @id @default(autoincrement())
+  name String
+  game TypeGame[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt()
+  deleted_at DateTime?
+
+  @@index([deleted_at])
+  @@map("type")
+}
+model TypeGame {
+  game Game @relation(fields: [game_id], references: [game_id], onDelete: Cascade)
+  game_id Int
+  type Type @relation(fields: [type_id],references: [type_id], onDelete: Cascade)
+  type_id Int
+
+  created_at DateTime @default(now())
+  @@id([game_id,type_id])
+  @@index([game_id])
+  @@index([type_id])
+  @@map("type_game")
+}
+
+model Platform {
+  platform_id Int @id @default(autoincrement())
+  name String
+  //Relation
+  game PlatformGame[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt()
+  deleted_at DateTime?
+  
+  @@index([deleted_at])
+  @@map("platform")
+}
+
+model PlatformGame {
+  game Game @relation(fields: [game_id], references: [game_id],onDelete: Cascade)
+  game_id Int
+  platform Platform @relation(fields: [platform_id], references: [platform_id], onDelete: Cascade)
+  platform_id Int
+
+  @@id([game_id, platform_id])
+  @@index([game_id])
+  @@index([platform_id])
+  @@map("platform_game")
+}
+model RefreshToken {
+  id Int @id @default(autoincrement())
+
+  token String
+
+  user    User @relation(fields: [user_id], references: [user_id])
+  user_id Int
+
+  created_at  DateTime @default(now())
+  expired_at DateTime
+
+  @@map("refresh_token")
+}
